@@ -68,7 +68,7 @@ class Matrix:
 
         if type(size) != tuple:
             raise TypeError(f'Expected {tuple} of (rows, columns). Received {type(size)}')
-        print(size[0])
+
         if type(size[0]) != int or type(size[1]) != int:
             raise TypeError(f'Expected {tuple} of ({int}, {int}). Received {type(size[0]), type(size[1])}')
 
