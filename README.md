@@ -16,3 +16,14 @@ python3 -m twine upload --repository testpypi dist/*
 ```
 pip install apex_matrix
 ```
+
+### Usage
+```python
+from apex_matrix.Matrix import Matrix
+
+# Create matrix object
+my_matrix = Matrix([1,2,3],[4,5,6])
+
+# View docs
+help(Matrix)
+```
