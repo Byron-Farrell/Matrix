@@ -9,7 +9,7 @@ python3 -m build
 ### Upload the distribution archive
 ```
 python3 -m pip install --upgrade twine
-python3 -m twine upload --repository testpypi dist/*
+python3 -m twine upload dist/*
 ```
 
 ### PIP Install
