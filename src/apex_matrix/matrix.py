@@ -197,19 +197,42 @@ class Matrix:
         :param other: The matrix to add to the current matrix.
         :type other: Matrix
         :raises TypeError: If the other operand is not of type Matrix.
-        :raises ValueError: If the matrices have incompatible dimensions for multiplication.
-        :return: A new Matrix instance of the current matrix + the other matrix.
+        :raises ValueError: If the matrices have incompatible dimensions for addition.
+        :return: A new matrix instance of the current matrix + the other matrix.
         :rtype: Matrix
         """
 
         if self.rows != other.rows and self.columns != other.columns:
-            raise ValueError(f'Cannot add matrix[{self.rows}][{self.columns}] by matrix[{other.rows}][{other.columns}]')
+            raise ValueError(f'Cannot add matrix[{self.rows}][{self.columns}] to matrix[{other.rows}][{other.columns}]')
 
         new_matrix = self.zero((self.rows, self.columns))
 
         for row in range(self.rows):
             for column in range(self.columns):
                 new_matrix[row][column] = self.matrix[row][column] + other[row][column]
+
+        return new_matrix
+
+    def __sub__(self, other):
+        """
+        Subtracts current matrix with another matrix
+
+        :param other: The matrix to subtract from the current matrix.
+        :type other: Matrix
+        :raises TypeError: If the other operand is not of type Matrix.
+        :raises ValueError: If the matrices have incompatible dimensions for subtraction.
+        :return: A new matrix instance of the current matrix - the other matrix.
+        :rtype: Matrix
+        """
+
+        if self.rows != other.rows and self.columns != other.columns:
+            raise ValueError(f'Cannot subtract matrix[{self.rows}][{self.columns}] from matrix[{other.rows}][{other.columns}]')
+
+        new_matrix = self.zero((self.rows, self.columns))
+
+        for row in range(self.rows):
+            for column in range(self.columns):
+                new_matrix[row][column] = self.matrix[row][column] - other[row][column]
 
         return new_matrix
 
