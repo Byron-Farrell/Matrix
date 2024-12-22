@@ -1,21 +1,31 @@
 # Matrix
 
 ### Generate distribution archive
-```
+```bash
 python3 -m pip install --upgrade build
+```
+```bash
 python3 -m build
 ```
 
 ### Upload the distribution archive
-```
+```bash
 python3 -m pip install --upgrade twine
+```
+```bash
 python3 -m twine upload dist/*
 ```
 
-### PIP Install
-```
+### Install
+```bash
 pip install apex_matrix
 ```
+
+### Tests
+```bash
+python3 -m unittest discover -s tests
+```
+
 
 ### Usage
 ```python

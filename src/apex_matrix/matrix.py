@@ -20,6 +20,9 @@ class Matrix:
         if validate:
             self.validate(matrix)
 
+        self._multiplication_valid_types = [type(self)]
+        self._multiplication_valid_scalars = [int, float]
+
         self.matrix = matrix
         self.rows = len(matrix)
         self.columns = len(matrix[0])
@@ -90,7 +93,7 @@ class Matrix:
 
         return transposed_matrix
 
-    def __mul__(self, other):
+    def __matrix_x_matrix(self, other):
         """
         Multiplies this matrix with another matrix.
 
@@ -99,16 +102,12 @@ class Matrix:
         the number of rows in the second matrix). If the matrices are compatible,
         it performs the multiplication and returns a new matrix.
 
-        :param other: The matrix to multiply with.
+        :param other: The matrix multiply with.
         :type other: Matrix
-        :raises TypeError: If the other operand is not of type Matrix.
         :raises ValueError: If the matrices have incompatible dimensions for multiplication.
-        :return: A new Matrix instance representing the product of the two matrices.
+        :return: A new Matrix instance of the current matrix multiplied by another matrix.
         :rtype: Matrix
         """
-
-        if type(other) != type(self):
-            raise TypeError(f'Cannot multiply {type(Matrix)} with {type(other)}')
 
         if self.columns != other.rows:
             raise ValueError(f'Cannot multiply matrix[{self.rows}][{self.columns}] by matrix[{other.rows}][{other.columns}]')
@@ -122,12 +121,122 @@ class Matrix:
 
         return new_matrix
 
+    def __matrix_x_scalar(self, scalar):
+        """
+        Multiplies this matrix by a scalar.
+
+        Multiplies each element in the matrix by the scalar
+
+        :param scalar: The scalar to multiply with.
+        :type scalar: int, float
+        :return: A new Matrix instance of the current matrix multiplied by a scalar
+        :rtype: Matrix
+        """
+
+        new_matrix = Matrix(self.matrix)
+
+        for row in range(new_matrix.rows):
+            for column in range(new_matrix.columns):
+                new_matrix[row][column] *= scalar
+
+        return new_matrix
+
+    def __mul__(self, other):
+        """
+        Multiplies this matrix with another matrix or this matrix by a scalar.
+
+        Matrix x Matrix
+        The method checks if the matrices are compatible for multiplication
+        (i.e., the number of columns in the first matrix must be equal to
+        the number of rows in the second matrix). If the matrices are compatible,
+        it performs the multiplication and returns a new matrix.
+
+        Matrix x Scaler
+        Multiplies each element in the matrix by the scalar
+
+        :param other: The matrix or scalar to multiply with.
+        :type other: Matrix, int, float
+        :raises TypeError: If the other operand is not of type Matrix, int or float.
+        :raises ValueError: If the matrices have incompatible dimensions for multiplication.
+        :return: A new Matrix instance of the current matrix multiplied by another matrix or scalar
+        :rtype: Matrix
+        """
+
+        if type(other) not in self._multiplication_valid_types and type(other) not in self._multiplication_valid_scalars:
+            raise TypeError(f'Cannot multiply {type(Matrix)} with {type(other)}')
+
+        if type(other) == type(self):
+            return self.__matrix_x_matrix(other)
+
+        if type(other) in self._multiplication_valid_scalars:
+            return self.__matrix_x_scalar(other)
+
+    def __rmul__(self, other):
+        """
+        Multiplies this matrix by a scalar.
+
+        Matrix x Scaler
+        Multiplies each element in the matrix by the scalar
+
+        :param other: The scalar to multiply with.
+        :type other: int, float
+        :raises TypeError: If the other operand is not of type int or float.
+        :return: A new Matrix instance scaled by the scalar.
+        :rtype: Matrix
+        """
+
+        if type(other) not in self._multiplication_valid_scalars:
+            raise TypeError(f'Cannot multiply {type(Matrix)} with {type(other)}')
+
+        return self.__matrix_x_scalar(other)
+
+    def __add__(self, other):
+        """
+        Adds current matrix with another matrix
+
+        :param other: The matrix to add to the current matrix.
+        :type other: Matrix
+        :raises TypeError: If the other operand is not of type Matrix.
+        :raises ValueError: If the matrices have incompatible dimensions for multiplication.
+        :return: A new Matrix instance of the current matrix + the other matrix.
+        :rtype: Matrix
+        """
+
+        if self.rows != other.rows and self.columns != other.columns:
+            raise ValueError(f'Cannot add matrix[{self.rows}][{self.columns}] by matrix[{other.rows}][{other.columns}]')
+
+        new_matrix = self.zero((self.rows, self.columns))
+
+        for row in range(self.rows):
+            for column in range(self.columns):
+                new_matrix[row][column] = self.matrix[row][column] + other[row][column]
+
+        return new_matrix
+
+    def __eq__(self, other):
+        """
+        Checks if the current matrix is equal to the other matrix
+
+        :param other: matrix to compare with
+        :return: bool
+        """
+
+        if self.rows != other.rows and self.columns != other.columns:
+            return False
+
+        for row in range(self.rows):
+            for column in range(self.columns):
+                if self.matrix[row][column] != other[row][column]:
+                    return False
+
+        return True
+
     def __getitem__(self, index):
         """
         Returns the element in the matrix based on the index.
 
-        :param index: index of the element you want to access
-        :return: The row at the specified index of the element in [row][column] if chained together
+        :param index: index of the element you want to access.
+        :return: The row at the specified index of the element in [row][column] if chained together.
         :rtype: list, type
         """
 
