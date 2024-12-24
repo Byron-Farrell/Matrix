@@ -93,6 +93,38 @@ class Matrix:
 
         return transposed_matrix
 
+    def element_wise_product(self, other):
+        """
+        Calculates the element wise product of two matrices. This is also known as the hadamard_product.
+
+        The two matrices must have the same number of rows and columns and the result is a matrix of the
+        same dimensions of the two matrices that equal the product of row i and column j for each element
+        in both matrices.
+
+
+        :param other: A matrix to multiply with the current matrix.
+        :type other: Matrix
+        :raises TypeError: If the parameter other is not a matrix.
+        :raises ValueError: If dimensions of the two matrices don't match.
+        :return: Returns a new matrix
+        :rtype Matrix
+        """
+
+        if type(other) != type(self):
+            raise TypeError(f'Cannot perform an element wise multiplication with {type(Matrix)} and {type(other)}')
+
+        if other.rows != self.rows and other.columns != self.columns:
+            raise ValueError(
+                f'Cannot perform element wise multiplication with a matrix of size {self.rows}x{self.columns} with {other.rows}x{other.columns}')
+
+        new_matrix = self.zero((self.rows, self.columns))
+
+        for row in range(self.rows):
+            for column in range(self.columns):
+                new_matrix[row][column] = self.matrix[row][column] * other[row][column]
+
+        return new_matrix
+
     def __matrix_x_matrix(self, other):
         """
         Multiplies this matrix with another matrix.
